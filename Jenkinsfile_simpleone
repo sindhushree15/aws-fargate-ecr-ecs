@@ -1,11 +1,20 @@
 pipeline {
   agent { dockerfile true}
+  environment {
+        AWS_ACCOUNT_ID="120717539064"
+        AWS_DEFAULT_REGION="us-west-2"
+        IMAGE_REPO_NAME="sample"
+        IMAGE_TAG="v1"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    }
   stages {
-    stage('source') {
+    stage('Logging into AWS ECR') {
             steps {
-               git 'https://github.com/sd031/aws_codebuild_codedeploy_nodeJs_demo.git'
+                script {
+                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                }
+                 
             }
-            
         }
     stage('Running Build') {
       steps {
