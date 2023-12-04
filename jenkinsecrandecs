@@ -11,7 +11,7 @@ ECS_CLUSTER = 'ECSFargateForPipeline'
 ECS_SERVICE = 'POC'
 IMAGE_TAG = 'latest' // Define your desired image tag here
 TASK_DEFINITION_NAME="Task name here"
-DESIRED_COUNT="Number of task running at a time"
+DESIRED_COUNT="1"
 
 }
 
