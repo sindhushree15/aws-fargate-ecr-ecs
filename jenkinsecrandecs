@@ -1,0 +1,55 @@
+pipeline {
+  agent any
+ 
+environment {
+AWS_ACCOUNT_ID = '816605281523'
+DOCKER_IMAGE_NAME = 'ecs_ec2_pipeline_repo'
+AWS_REGION = 'ca-central-1'
+// ECR_REGISTRY = 'https://816605281523.dkr.ecr.ca-central-1.amazonaws.com/ecs_ec2_pipeline_repo'
+REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER_IMAGE_NAME}"
+ECS_CLUSTER = 'ECSFargateForPipeline'
+ECS_SERVICE = 'POC'
+IMAGE_TAG = 'latest' // Define your desired image tag here
+
+}
+
+  stages {
+    stage('source') {
+            steps {
+               checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://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@github.com/Secure-Energy/FF_Streamlit.git/']]])    
+            }
+           
+        }
+       
+stage('Logging into AWS ECR') {
+            steps {
+                script {
+                sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+                }
+                 
+            }
+        }        
+       
+        // Building Docker images
+   
+   
+   
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build "${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
+        }
+      }
+    }
+       
+    // Uploading Docker images into AWS ECR
+    stage('Pushing to ECR') {
+     steps{  
+         script {
+                sh "docker tag ${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
+                sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
+         }
+        }
+      }
+  }
+}
