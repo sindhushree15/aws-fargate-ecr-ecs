@@ -10,6 +10,8 @@ REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER
 ECS_CLUSTER = 'ECSFargateForPipeline'
 ECS_SERVICE = 'POC'
 IMAGE_TAG = 'latest' // Define your desired image tag here
+TASK_DEFINITION_NAME="Task name here"
+DESIRED_COUNT="Number of task running at a time"
 
 }
 
@@ -49,6 +51,14 @@ stage('Logging into AWS ECR') {
                 sh "docker tag ${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
                 sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
          }
+        }
+      }
+   // Deploy to ECS
+    stage('Pushing to ECR') {
+     steps{  
+         script {
+                sh './script.sh'
+           }
         }
       }
   }
