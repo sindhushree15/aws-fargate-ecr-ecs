@@ -54,7 +54,7 @@ stage('Logging into AWS ECR') {
         }
       }
    // Deploy to ECS
-    stage('Pushing to ECR') {
+    stage('Deploy to ECS') {
      steps{  
          script {
                 sh './script.sh'
