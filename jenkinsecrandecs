@@ -10,7 +10,7 @@ REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${DOCKER
 ECS_CLUSTER = 'ECSFargateForPipeline'
 ECS_SERVICE = 'POC'
 IMAGE_TAG = 'latest' // Define your desired image tag here
-TASK_DEFINITION_NAME="Task name here"
+TASK_DEFINITION_NAME="JenkinsPipelineTask"
 DESIRED_COUNT="1"
 
 }
