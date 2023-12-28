@@ -18,4 +18,11 @@ aws ecs register-task-definition --cli-input-json file://task-definition.json --
 
 REVISION=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.revision`
 echo "REVISION= " "${REVISION}"
+
+#Check load balancers exists Method 1
+aws elbv2 describe-load-balancers --load-balancer-arns arn:aws:elasticloadbalancing:us-west-2:xxxxxxxx:loadbalancer/app/production-lambda-alb/yyyyyyyyyyyy
+
+#Method 2
+load_balancer_arn = aws elbv2 describe-load-balancers --names 'load balancer name' --query "LoadBalancers[0].LoadBalancerArn" --output text 2> /dev/null
+if [-z "$load_balancer_arn"]; then IsExists=0 else IsExists=1
 aws ecs update-service --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}":"${REVISION}" --desired-count "${DESIRED_COUNT}"
