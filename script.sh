@@ -32,5 +32,6 @@ https://docs.aws.amazon.com/cli/latest/reference/ecs/update-service.html#example
 aws elbv2 create-load-balancer \
     --name my-load-balancer \
     --subnets subnet-b7d581c0 subnet-8360a9e7
-  
+
+aws ecs update-service --cluster "${CLUSTER_NAME}" --load-balancers "laodbalancer arn" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}":"${REVISION}" --desired-count "${DESIRED_COUNT}"
 aws ecs update-service --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}":"${REVISION}" --desired-count "${DESIRED_COUNT}"
