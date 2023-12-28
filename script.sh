@@ -25,4 +25,11 @@ aws elbv2 describe-load-balancers --load-balancer-arns arn:aws:elasticloadbalanc
 #Method 2
 load_balancer_arn = aws elbv2 describe-load-balancers --names 'load balancer name' --query "LoadBalancers[0].LoadBalancerArn" --output text 2> /dev/null
 if [-z "$load_balancer_arn"]; then IsExists=0 else IsExists=1
+
+#https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-load-balancer.html#examples
+#https://docs.aws.amazon.com/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html
+aws elbv2 create-load-balancer \
+    --name my-load-balancer \
+    --subnets subnet-b7d581c0 subnet-8360a9e7
+  
 aws ecs update-service --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}":"${REVISION}" --desired-count "${DESIRED_COUNT}"
