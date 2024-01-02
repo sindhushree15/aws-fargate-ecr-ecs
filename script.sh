@@ -29,10 +29,26 @@ if [-z "$load_balancer_arn"]; then IsExists=0 else IsExists=1
 #https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-load-balancer.html#examples
 #https://docs.aws.amazon.com/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html
 #https://docs.aws.amazon.com/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html
-https://docs.aws.amazon.com/cli/latest/reference/ecs/update-service.html#examples
+#https://docs.aws.amazon.com/cli/latest/reference/ecs/update-service.html#examples
 aws elbv2 create-load-balancer \
     --name my-load-balancer \
     --subnets subnet-b7d581c0 subnet-8360a9e7
+#Create targets and register 
+aws elbv2 create-target-group --name my-targets --protocol HTTP --port 80 \
+--vpc-id vpc-0598c7d356EXAMPLE --ip-address-type [ipv4 or ipv6]
+
+#Register targets
+aws elbv2 register-targets --target-group-arn targetgroup-arn  \
+--targets Id=i-0abcdef1234567890 Id=i-1234567890abcdef0
+
+#Create listeners to forward request to ECS
+aws elbv2 create-listener --load-balancer-arn loadbalancer-arn \
+--protocol HTTP --port 80  \
+--default-actions Type=forward,TargetGroupArn=targetgroup-arn
+
+#Verify the health of the registered tragets
+aws elbv2 describe-target-health --target-group-arn targetgroup-arn
+
 
 aws ecs update-service --cluster "${CLUSTER_NAME}" --load-balancers "laodbalancer arn" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}":"${REVISION}" --desired-count "${DESIRED_COUNT}"
 aws ecs update-service --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}":"${REVISION}" --desired-count "${DESIRED_COUNT}"
