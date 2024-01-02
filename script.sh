@@ -28,6 +28,7 @@ if [-z "$load_balancer_arn"]; then IsExists=0 else IsExists=1
 
 #https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-load-balancer.html#examples
 #https://docs.aws.amazon.com/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html
+#https://docs.aws.amazon.com/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html
 https://docs.aws.amazon.com/cli/latest/reference/ecs/update-service.html#examples
 aws elbv2 create-load-balancer \
     --name my-load-balancer \
