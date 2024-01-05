@@ -35,7 +35,7 @@ aws elbv2 create-load-balancer \
     --subnets subnet-b7d581c0 subnet-8360a9e7
 #Create targets and register 
 aws elbv2 create-target-group --name my-targets --protocol HTTP --port 80 \
---vpc-id vpc-0598c7d356EXAMPLE --ip-address-type [ipv4 or ipv6]
+--vpc-id vpc-0598c7d356EXAMPLE --ip-address-type [ipv4 or ipv6] --target-type ip
 
 #Register targets
 #https://fossies.org/linux/aws-cli/awscli/examples/elbv2/register-targets.rst
