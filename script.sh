@@ -38,6 +38,8 @@ aws elbv2 create-target-group --name my-targets --protocol HTTP --port 80 \
 --vpc-id vpc-0598c7d356EXAMPLE --ip-address-type [ipv4 or ipv6]
 
 #Register targets
+#https://fossies.org/linux/aws-cli/awscli/examples/elbv2/register-targets.rst
+#https://docs.aws.amazon.com/cli/latest/reference/elbv2/register-targets.html
 aws elbv2 register-targets --target-group-arn targetgroup-arn  \
 --targets Id=i-0abcdef1234567890 Id=i-1234567890abcdef0
 
