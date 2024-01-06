@@ -20,7 +20,20 @@ REVISION=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_
 echo "REVISION= " "${REVISION}"
 
 #Check load balancers exists Method 1
-aws elbv2 describe-load-balancers --load-balancer-arns arn:aws:elasticloadbalancing:us-west-2:xxxxxxxx:loadbalancer/app/production-lambda-alb/yyyyyyyyyyyy
+BLNCR_ARN=`aws elbv2 describe-load-balancers --load-balancer-arns arn:aws:elasticloadbalancing:ca-central-1:816605281523:loadbalancer/app/secure-applications-ecs/d9db12d799161a4c --region ca-central-1 | jq.LoadBalancers[].LoadBalancerArn`
+
+if [ -z "$BLNCR_ARN" ]; then
+    echo "🔥🔥🔥🔥🔥Balancer doesn't exists, create one and save the ARN🔥🔥🔥🔥🔥🔥"
+    BLNCR_ARN=`aws elbv2 create-load-balancer \
+     --scheme internal \
+     --name my-testing-balancer \
+     --subnets subnet-0da689ba36c2af4c9 subnet-0875527f8fb822536 \
+     --region ca-central-1 \
+     --security-groups sg-0c107ac1969ee10a4 | jq.LoadBalancers[].LoadBalancerArn`
+else
+    echo "🔥🔥🔥🔥🔥$BLNCR_ARN🔥🔥🔥🔥🔥🔥"
+fi
+
 
 #Method 2
 load_balancer_arn = aws elbv2 describe-load-balancers --names 'load balancer name' --query "LoadBalancers[0].LoadBalancerArn" --output text 2> /dev/null
