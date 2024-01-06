@@ -22,7 +22,9 @@ aws ecs register-task-definition --cli-input-json file://task-definition.json --
  echo "REVISION= " "${REVISION}"
 
  #Check wheather load balancers exists 
-BLNCR_ARN=`aws elbv2 describe-load-balancers --load-balancer-arns arn:aws:elasticloadbalancing:ca-central-1:816605281523:loadbalancer/app/secure-applications-ecs/d9db12d799161a4c --region ca-central-1 | jq.LoadBalancers[].LoadBalancerArn`
+#BLNCR_ARN=`aws elbv2 describe-load-balancers --load-balancer-arns arn:aws:elasticloadbalancing:ca-central-1:816605281523:loadbalancer/app/secure-applications-ecs/d9db12d799161a4c --region ca-central-1 | jq.LoadBalancers[].LoadBalancerArn`
+BLNCR_ARN=`aws elbv2 describe-load-balancers --names 'my-testing-balancer' --region ca-central-1 | jq .LoadBalancers[].LoadBalancerArn`
+load_balancer_arn = aws elbv2 describe-load-balancers --names 'load balancer name' --query "LoadBalancers[0].LoadBalancerArn" --output text 2> /dev/null
 
 if [ -z "$BLNCR_ARN" ]; then
     echo "🔥🔥🔥🔥🔥Balancer doesn't exists, create one and save the ARN🔥🔥🔥🔥🔥🔥"
