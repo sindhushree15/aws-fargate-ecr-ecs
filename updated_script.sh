@@ -89,3 +89,6 @@ fi
 # aws ecs update-service --cluster ECSFargateForPipeline --service jenkin-streamlit --task-definition jenkin-streamlit-service --desired-count 1 --region ca-central-1
 aws ecs update-service --cluster ECSFargateForPipeline --service jenkin-streamlit-service --task-definition jenkin-streamlit --region ca-central-1 --desired-count 2
 
+$originalString = 'Hello! you are using the "Replace" method to replace Double Quotes in PowerShell'
+$newString = $originalString.Replace('"', "")
+Write-Host $newString 
