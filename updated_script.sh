@@ -34,25 +34,26 @@ if [ -z "$BLNCR_ARN" ]; then
      --subnets subnet-0da689ba36c2af4c9 subnet-0875527f8fb822536 \
      --region ca-central-1 \
      --security-groups sg-0c107ac1969ee10a4 | jq.LoadBalancers[0].LoadBalancerArn`
+#####################################################################################################################################
+     BLNCR_ARN=`aws elbv2 create-load-balancer \
+              --scheme internal \
+              --name my-testing-balancer \
+              --subnets subnet-0a87267922cd88faa subnet-07595fe014ff3de1d \
+              --region us-east-1 \
+              --security-groups sg-0679ceb9cd27a45db --output text --query "LoadBalancers[0].LoadBalancerArn"`
+echo $BLNCR_ARN
 
-     #Method 2
-     BLNCR_ARN2=aws elbv2 create-load-balancer \
-     --scheme internal \
-     --name my-testing-balancer \
-     --subnets subnet-0da689ba36c2af4c9 subnet-0875527f8fb822536 \
-     --region ca-central-1 \
-     --security-groups sg-0c107ac1969ee10a4 --query "LoadBalancers[0].LoadBalancerArn"
-     echo "BLNCR_ARN2 =="$BLNCR_ARN2
-     
-     #Method 3
-      BLNCR_ARN3=aws elbv2 create-load-balancer \
-     --scheme internal \
-     --name my-testing-balancer \
-     --subnets subnet-0da689ba36c2af4c9 subnet-0875527f8fb822536 \
-     --region ca-central-1 \
-     --security-groups sg-0c107ac1969ee10a4 | jq.LoadBalancers[0].LoadBalancerArn
-      echo "BLNCR_ARN3 =="$BLNCR_ARN3
+TARGET_GRP_ARN=`aws elbv2 create-target-group --name jenkins-target --protocol HTTP --port 80 \
+             --vpc-id vpc-0e9b621472e9f1a7d --ip-address-type ipv4 --target-type ip \
+             --region us-east-1 --output text --query "TargetGroups[0].TargetGroupArn"`
 
+echo $TARGET_GRP_ARN
+
+
+aws elbv2 register-targets --target-group-arn $TARGET_GRP_ARN  \
+             --targets Id=10.211.29.189 \
+             --region us-east-1
+#####################################################################################################################################
 
      TARGET_GRP_ARN=`aws elbv2 create-target-group --name jenkins-target --protocol HTTP --port 80 \
      --vpc-id vpc-013a94a651e62b40b --ip-address-type ipv4 --target-type ip \
