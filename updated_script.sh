@@ -35,7 +35,7 @@ if [ -z "$BLNCR_ARN" ]; then
      --region ca-central-1 \
      --security-groups sg-0c107ac1969ee10a4 | jq.LoadBalancers[0].LoadBalancerArn`
 #####################################################################################################################################
-     BLNCR_ARN=`aws elbv2 create-load-balancer \
+BLNCR_ARN=`aws elbv2 create-load-balancer \
               --scheme internal \
               --name my-testing-balancer \
               --subnets subnet-0a87267922cd88faa subnet-07595fe014ff3de1d \
@@ -50,9 +50,12 @@ TARGET_GRP_ARN=`aws elbv2 create-target-group --name jenkins-target --protocol H
 echo $TARGET_GRP_ARN
 
 
-aws elbv2 register-targets --target-group-arn $TARGET_GRP_ARN  \
-             --targets Id=10.211.29.189 \
-             --region us-east-1
+#aws elbv2 register-targets --target-group-arn $TARGET_GRP_ARN  \
+#            --targets Id=10.211.29.189 \
+#            --region us-east-1
+
+aws elbv2 delete-load-balancer --load-balancer-arn $BLNCR_ARN
+aws elbv2 delete-target-group --target-group-arn $TARGET_GRP_ARN
 #####################################################################################################################################
 
      TARGET_GRP_ARN=`aws elbv2 create-target-group --name jenkins-target --protocol HTTP --port 80 \
