@@ -95,5 +95,7 @@ aws ecs update-service --cluster ECSFargateForPipeline --service jenkin-streamli
 
 #Updates of task 
 #aws ecs update-service --cluster ECSFargateForPipeline --service jenkin-streamlit-service --task-definition jenkin-streamlit --region ca-central-1 --desired-count 2 --force-new-deployment > dev/null
+#https://serverfault.com/questions/821060/ecs-service-doesnt-update-the-task-definition
+
 #Getting IP address
 #https://stackoverflow.com/questions/49354116/how-do-i-retrieve-the-public-ip-for-a-fargate-task-using-the-cli
