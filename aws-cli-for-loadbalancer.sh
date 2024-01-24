@@ -12,6 +12,12 @@ aws elbv2 create-load-balancer \
 aws elbv2 create-target-group --name my-targets --protocol HTTP --port 80 \
 --vpc-id vpc-0598c7d356EXAMPLE --ip-address-type ipv4 --target-type ip
 
+SERVICE_NAME="jenkin-streamlit-service"
+
+TASK_ARN=$(aws ecs list-tasks --cluster ECSFargateForPipeline --service-name "$SERVICE_NAME" --region ca-central-1 --query 'taskArns[0]' --output text)
+echo $TASK_ARN
+TASK_DETAILS=$(aws ecs describe-tasks --cluster ECSFargateForPipeline --task "${TASK_ARN}" --region ca-central-1 --query 'tasks[0].attachments[0].details[0].privateIPv4Address')
+echo $TASK_DETAILS
 
 aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:ca-central-1:816605281523:targetgroup/test-target/d3122a15152d818f  \
     --targets Id=10.211.28.210 \
